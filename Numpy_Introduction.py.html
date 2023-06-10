@@ -1,0 +1,176 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# #Import Packages
+
+# In[ ]:
+
+
+import numpy as np
+import panda as pd
+
+
+# # Create data with Numpy
+
+# In[2]:
+
+
+#create a serie
+
+S=[1, 2, 3, 4, 5]  # Definition of a Serie
+S_series= np.array(S)
+print(S_series)  # affiche le numpy array
+
+
+# In[3]:
+
+
+#Create a numpy data with a matrix
+matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+MatrixNumpy = np.array(matrix)
+print(MatrixNumpy)
+
+
+# In[4]:
+
+
+#Create a numpy array with zeros
+zeros_numpy= np.zeros((3,3))
+print(zeros_numpy)
+
+
+# In[ ]:
+
+
+#Create a numpy array with ones
+array_ones = np.ones((4,2))
+print(array_ones)
+
+
+# In[5]:
+
+
+#How  to create an Identity Matrix 
+Identity_eye = np.eye(3)
+Identity_eye
+
+
+# In[ ]:
+
+
+array_linspace = np.linspace(0, 1, 10)#Très utile pour les graphiques
+array_linspace
+
+
+# In[6]:
+
+
+# How to create numpy array with random numbers
+random_Numbers = np.random.random((5,4))
+
+
+# In[ ]:
+
+
+#Basic Mathematics function
+array1=array_with_liste
+array_sum = np.sum(array1)
+array_mean = np.mean(array1)
+array_std = np.std(array1)
+array_min = np.min(array1)
+array_max = np.max(array1)
+array_sqrt = np.sqrt(array1)
+array_abs = np.abs(array1)
+array_power = np.power(array1, 2)
+array_exp = np.exp(array1)
+array_log = np.log(np.abs(array1))
+array_sin = np.sin(array1)
+array_median = np.median(array1)
+
+
+# In[18]:
+
+
+# Produit matriciel
+matrice1 =np.random.random((3,3))
+matrice2 =np.random.random((3,3))
+
+produit_matriciel = np.dot(matrice1,matrice2)
+print(produit_matriciel)
+
+
+# In[16]:
+
+
+matrice1 =np.random.random((3,3))
+
+
+# In[20]:
+
+
+# Produit matriciel
+matrice1 =np.random.random((3,3))
+matrice2 =np.random.random((3,3))
+
+produit_matriciel = np.dot(matrice1,matrice2)
+print(produit_matriciel)
+
+
+# In[24]:
+
+
+#Transposed
+transpost_Matrix = np.transpose(matrice1)
+print(transpost_Matrix)
+
+
+# In[27]:
+
+
+#Matrice Inversion
+array_eye=np.eye((3))
+inverse = np.linalg.inv(array_eye)
+print(inverse)
+
+
+# In[30]:
+
+
+# Determinant of Matrices
+
+arrayrandom2=np.random.random((3,3))
+determinant=np.linalg.det(arrayrandom2)
+print(determinant)
+
+
+# In[37]:
+
+
+# Accès aux éléments
+array1 = np.random.random((1,4))
+premier_element = array1[0,1]
+print(premier_element)
+
+
+# In[39]:
+
+
+# Modification of an elelement
+array1[0,1]=20
+print(array1)
+
+
+# In[40]:
+
+
+# Sélection des éléments qui respectent une condition
+condition = array1 > 5
+array_with_condition = array1[array1 > 2]
+array_with_condition
+
+
+# In[ ]:
+
+
+
+
