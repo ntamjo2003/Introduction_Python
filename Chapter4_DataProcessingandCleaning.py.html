@@ -1,0 +1,269 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[ ]:
+
+
+import numpy as np
+import pandas as pd
+
+
+# In[ ]:
+
+
+loan_data_backup = pd.read_csv('loan_data_2007_2014.csv')
+
+
+# In[ ]:
+
+
+loan_data = loan_data_backup.copy()
+loan_data
+pd.options.display.max_columns = None
+
+
+# In[ ]:
+
+
+loan_data
+
+
+# In[ ]:
+
+
+loan_data.head();
+loan_data.tail()
+loan_data.columns.values
+loan_data.info()
+
+
+# In[ ]:
+
+
+### Max Columns
+pd.options.display.max_columns = None
+pd.options.display.max_columns 
+
+
+# ## General Processing 
+# 
+# 
+# 
+# 
+
+# In[ ]:
+
+
+loan_data['emp_length'].unique()
+
+
+# In[ ]:
+
+
+## We want to remove the string part of the years. With this code, we remove the following string
+### + years,< year,n/a, nan
+
+loan_data['emp_length_int'] = loan_data['emp_length'].str.replace('\+ years', '')
+loan_data['emp_length_int'] = loan_data['emp_length_int'].str.replace('< 1 year', str(0))
+loan_data['emp_length_int'] = loan_data['emp_length_int'].str.replace('n/a',  str(0))
+loan_data['emp_length_int'] = loan_data['emp_length_int'].str.replace(' years', '')
+loan_data['emp_length_int'] = loan_data['emp_length_int'].str.replace(' year', '')
+
+
+# In[ ]:
+
+
+type(loan_data['emp_length_int'][0])
+
+
+# In[ ]:
+
+
+loan_data['emp_length_int'] = pd.to_numeric(loan_data['emp_length_int'])
+
+
+# In[ ]:
+
+
+### Clean data from earliest_cr_line. Here we see the dates from earliest credit line.
+
+loan_data['earliest_cr_line']
+
+
+# In[ ]:
+
+
+### This code tells me how to transform the dates in format year, month, day
+
+loan_data['earliest_cr_line_date'] = pd.to_datetime(loan_data['earliest_cr_line'], format = '%b-%y')
+loan_data['earliest_cr_line_date']
+
+
+# In[ ]:
+
+
+### We do the difference between 01 December 2017 and the dates in the values Earliest Credit line date. Thus we count theà
+## the numbers of days between both dates
+
+pd.to_datetime('2017-12-01') - loan_data['earliest_cr_line_date']
+
+
+# In[ ]:
+
+
+loan_data['mths_since_earliest_cr_line'] = round(pd.to_numeric((pd.to_datetime('2017-12-01') - loan_data['earliest_cr_line_date']) / np.timedelta64(1, 'M')))
+
+
+# In[ ]:
+
+
+#### Statistics of the number of days
+
+loan_data['mths_since_earliest_cr_line'].describe()
+
+
+# In[ ]:
+
+
+loan_data.loc[: , ['earliest_cr_line', 'earliest_cr_line_date', 'mths_since_earliest_cr_line']][loan_data['mths_since_earliest_cr_line'] < 0]
+
+
+# In[ ]:
+
+
+loan_data['mths_since_earliest_cr_line'][loan_data['mths_since_earliest_cr_line'] < 0] = loan_data['mths_since_earliest_cr_line'].max()
+
+
+# In[ ]:
+
+
+min(loan_data['mths_since_earliest_cr_line'])
+
+
+# In[ ]:
+
+
+#### See the elements in the variable emp_length
+loan_data['emp_length'].unique()
+
+## See all the Zip Code in the columns zip_code
+loan_data['zip_code'].unique()
+### See all elements of term variable
+loan_data['term'].unique()
+
+
+# In[ ]:
+
+
+### How to remove the string part of the variable term and leave only the number of month
+
+loan_data['term'] = loan_data['term'].str.replace('\+ month', '')
+
+
+# #### Homework
+# 
+# 
+# 
+# 
+
+# In[ ]:
+
+
+### How to replace the string part of the variable Term. It is described with number+month(ie 8 months, 9 months...etc). We
+### We just need to work with 8, 9, 12....etc. For months part, we need to apply the below code 
+loan_data['term']
+loan_data['term'].describe()
+loan_data['term_int'] = loan_data['term'].str.replace(' months', '')
+
+
+# In[ ]:
+
+
+loan_data['term'].describe()
+loan_data['term_int']
+type(loan_data['term_int'][25])
+loan_data['term_int'] = pd.to_numeric(loan_data['term'].str.replace(' months', ''))
+loan_data['term_int']
+type(loan_data['term_int'][0])
+loan_data['issue_d']
+loan_data['issue_d_date'] = pd.to_datetime(loan_data['issue_d'], format = '%b-%y')
+loan_data['mths_since_issue_d'] = round(pd.to_numeric((pd.to_datetime('2017-12-01') - loan_data['issue_d_date']) / np.timedelta64(1, 'M')))
+loan_data['mths_since_issue_d'].describe()
+
+
+# #Processing few discrete Variables
+# 
+
+# In[ ]:
+
+
+loan_data.info()
+pd.get_dummies(loan_data['grade'])
+pd.get_dummies(loan_data['grade'], prefix = 'grade', prefix_sep = ':')
+
+
+# In[ ]:
+
+
+loan_data_dummies = [pd.get_dummies(loan_data['grade'], prefix = 'grade', prefix_sep = ':'),
+                     pd.get_dummies(loan_data['sub_grade'], prefix = 'sub_grade', prefix_sep = ':'),
+                     pd.get_dummies(loan_data['home_ownership'], prefix = 'home_ownership', prefix_sep = ':'),
+                     pd.get_dummies(loan_data['verification_status'], prefix = 'verification_status', prefix_sep = ':'),
+                     pd.get_dummies(loan_data['loan_status'], prefix = 'loan_status', prefix_sep = ':'),
+                     pd.get_dummies(loan_data['purpose'], prefix = 'purpose', prefix_sep = ':'),
+                     pd.get_dummies(loan_data['addr_state'], prefix = 'addr_state', prefix_sep = ':'),
+                     pd.get_dummies(loan_data['initial_list_status'], prefix = 'initial_list_status', prefix_sep = ':')]
+
+
+# In[ ]:
+
+
+loan_data_dummies = pd.concat(loan_data_dummies, axis = 1)
+type(loan_data_dummies)
+loan_data = pd.concat([loan_data, loan_data_dummies], axis = 1)
+loan_data.columns.values
+
+
+# ### Check for missing variables
+# 
+# 
+# 
+# 
+# 
+
+# In[ ]:
+
+
+loan_data.columns.values
+loan_data.isnull()
+pd.options.display.max_rows = None
+loan_data.isnull().sum()
+pd.options.display.max_rows = 100
+loan_data['total_rev_hi_lim'].fillna(loan_data['funded_amnt'], inplace = True)
+loan_data['total_rev_hi_lim'].isnull().sum()
+
+
+# In[ ]:
+
+
+# Homework
+
+
+# In[ ]:
+
+
+loan_data['annual_inc'].fillna(loan_data['annual_inc'].mean(), inplace=True)
+
+
+# In[ ]:
+
+
+loan_data['mths_since_earliest_cr_line'].fillna(0, inplace=True)
+loan_data['acc_now_delinq'].fillna(0, inplace=True)
+loan_data['total_acc'].fillna(0, inplace=True)
+loan_data['pub_rec'].fillna(0, inplace=True)
+loan_data['open_acc'].fillna(0, inplace=True)
+loan_data['inq_last_6mths'].fillna(0, inplace=True)
+loan_data['delinq_2yrs'].fillna(0, inplace=True)
+loan_data['emp_length_int'].fillna(0, inplace=True)
+
